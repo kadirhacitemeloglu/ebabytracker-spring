@@ -86,7 +86,7 @@ Content-Type: application/json
 
 ```json
 {
-  "name": "Lidya",
+  "name": "Name",
   "gender": "FEMALE",
   "notes": "First baby",
   "birthDay": "2024-11-11",
@@ -139,7 +139,7 @@ Content-Type: application/json
 
 ```json
 {
-  "name": "Lidya Updated",
+  "name": "Name Updated",
   "gender": "FEMALE",
   "notes": "Updated notes",
   "birthDay": "2024-11-11",
