@@ -19,4 +19,7 @@ public interface BabyService {
 
 
     BabyDto updateBaby(Long id, BabyUpdateRequest updateRequest);
+
+
+    List <BabyDto> getBabiesForParent(Long parentId);
 }

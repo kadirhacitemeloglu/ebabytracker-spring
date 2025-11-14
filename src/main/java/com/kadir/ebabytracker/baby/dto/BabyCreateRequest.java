@@ -36,7 +36,7 @@ public class BabyCreateRequest {
     private LocalDate birthDay;
 
     @NotNull (message = "Parent ID is required")
-    private Long parentID;
+    private Long parentId;
 
 
 

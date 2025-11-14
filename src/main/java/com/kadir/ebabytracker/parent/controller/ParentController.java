@@ -1,6 +1,7 @@
 package com.kadir.ebabytracker.parent.controller;
 
 import com.kadir.ebabytracker.baby.dto.BabyDto;
+import com.kadir.ebabytracker.baby.service.BabyService;
 import com.kadir.ebabytracker.parent.dto.ParentCreateRequest;
 import com.kadir.ebabytracker.parent.dto.ParentDto;
 import com.kadir.ebabytracker.parent.model.Parent;
@@ -16,11 +17,13 @@ import java.util.List;
 public class ParentController {
 
     private final ParentService parentService;
+    private final BabyService babyService;
 
 
-    public ParentController(ParentService parentService) {
+    public ParentController(ParentService parentService, BabyService babyService) {
         this.parentService = parentService;
 
+        this.babyService = babyService;
     }
 
     @GetMapping
@@ -46,7 +49,8 @@ public class ParentController {
 
     @GetMapping("/{id}/babies")
     public List<BabyDto> getParentBabies(@PathVariable Long id){
-        return parentService.getBabiesForParent();
+        return parentService.getBabiesForParent(id);
+
     }
 
 

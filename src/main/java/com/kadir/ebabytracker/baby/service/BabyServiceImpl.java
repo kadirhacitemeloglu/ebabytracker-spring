@@ -18,6 +18,7 @@ public class BabyServiceImpl implements BabyService {
 
     private final BabyRepository babyRepository;
 
+
     public BabyServiceImpl(BabyRepository babyRepository, ParentRepository parentRepository){
         this.babyRepository = babyRepository;
         this.parentRepository = parentRepository;
@@ -28,7 +29,7 @@ public class BabyServiceImpl implements BabyService {
     @Override
     public BabyDto createBaby(BabyCreateRequest request) {
 
-        Parent parent = parentRepository.findById(request.getParentID()).orElseThrow(() -> new RuntimeException("Parent not found with id: " + request.getParentID()));
+        Parent parent = parentRepository.findById(request.getParentId()).orElseThrow(() -> new RuntimeException("Parent not found with id: " + request.getParentId()));
         Baby baby = new Baby();
         baby.setName(request.getName());
         baby.setGender(request.getGender());
@@ -78,6 +79,16 @@ public class BabyServiceImpl implements BabyService {
 
         Baby updateBaby = babyRepository.save(baby);
         return toDto(updateBaby);
+    }
+
+    @Override
+    public List <BabyDto> getBabiesForParent(Long parentId){
+
+        Parent parent = parentRepository.findById(parentId).orElseThrow(()-> new RuntimeException("Parent not found"));
+        List <Baby> babies =babyRepository.findAllByParent_Id(parentId);
+        return babies.stream()
+                .map(this::toDto)
+                .toList();
     }
 
     private BabyDto toDto(Baby baby) {

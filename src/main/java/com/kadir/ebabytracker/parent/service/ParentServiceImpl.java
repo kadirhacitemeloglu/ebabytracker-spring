@@ -1,5 +1,8 @@
 package com.kadir.ebabytracker.parent.service;
 
+import com.kadir.ebabytracker.baby.dto.BabyDto;
+import com.kadir.ebabytracker.baby.model.Baby;
+import com.kadir.ebabytracker.baby.repository.BabyRepository;
 import com.kadir.ebabytracker.parent.dto.ParentCreateRequest;
 import com.kadir.ebabytracker.parent.dto.ParentDto;
 import com.kadir.ebabytracker.parent.model.Parent;
@@ -13,9 +16,11 @@ import java.util.stream.Collectors;
 public class ParentServiceImpl implements ParentService{
 
     private final ParentRepository parentRepository;
+    private final BabyRepository babyRepository;
 
-    public ParentServiceImpl(ParentRepository parentRepository) {
+    public ParentServiceImpl(ParentRepository parentRepository, BabyRepository babyRepository) {
         this.parentRepository = parentRepository;
+        this.babyRepository = babyRepository;
     }
 
 
@@ -52,14 +57,38 @@ public class ParentServiceImpl implements ParentService{
         parentRepository.deleteById(id);
     }
 
+    @Override
+    public List <BabyDto> getBabiesForParent(Long parentId){
+
+        parentRepository.findById(parentId).orElseThrow(()-> new RuntimeException("Parent not found"));
+
+        List <Baby> babies =babyRepository.findAllByParent_Id(parentId);
+
+        return babies.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
     private ParentDto toDto(Parent parent) {
         ParentDto dto = new ParentDto();
         dto.setId(parent.getId());
         dto.setPassword(parent.getPassword());
         dto.setFullName(parent.getFullName());
         dto.setEMail(parent.getEmail());
+
         return dto;
     }
 
+    private BabyDto toDto(Baby baby) {
+        BabyDto dto = new BabyDto();
+        dto.setId(baby.getId());
+        dto.setName(baby.getName());
+        dto.setGender(baby.getGender());
+        dto.setBirthDay(baby.getBirthDay());
+        dto.setWeight(baby.getWeight());
+        dto.setHeight(baby.getHeight());
+        dto.setNotes(baby.getNotes());
+        return dto;
+    }
 
 }
