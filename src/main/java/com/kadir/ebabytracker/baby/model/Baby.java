@@ -1,5 +1,6 @@
 package com.kadir.ebabytracker.baby.model;
 
+import com.kadir.ebabytracker.parent.model.Parent;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,5 +35,9 @@ public class Baby{
 
     private Double weight;
     private Double height;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id" , nullable = false)
+    private Parent parent;
 
 }

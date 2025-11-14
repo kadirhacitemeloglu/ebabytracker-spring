@@ -35,6 +35,9 @@ public class BabyCreateRequest {
     @Past(message =  "Birth day must be in the past!")
     private LocalDate birthDay;
 
+    @NotNull (message = "Parent ID is required")
+    private Long parentID;
+
 
 
 }

@@ -6,6 +6,8 @@ import com.kadir.ebabytracker.baby.dto.BabyDto;
 import com.kadir.ebabytracker.baby.dto.BabyUpdateRequest;
 import com.kadir.ebabytracker.baby.model.Baby;
 import com.kadir.ebabytracker.baby.repository.BabyRepository;
+import com.kadir.ebabytracker.parent.model.Parent;
+import com.kadir.ebabytracker.parent.repository.ParentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,13 +18,17 @@ public class BabyServiceImpl implements BabyService {
 
     private final BabyRepository babyRepository;
 
-    public BabyServiceImpl(BabyRepository babyRepository){
+    public BabyServiceImpl(BabyRepository babyRepository, ParentRepository parentRepository){
         this.babyRepository = babyRepository;
+        this.parentRepository = parentRepository;
     }
 
+    private final ParentRepository parentRepository;
 
     @Override
     public BabyDto createBaby(BabyCreateRequest request) {
+
+        Parent parent = parentRepository.findById(request.getParentID()).orElseThrow(() -> new RuntimeException("Parent not found with id: " + request.getParentID()));
         Baby baby = new Baby();
         baby.setName(request.getName());
         baby.setGender(request.getGender());
@@ -30,6 +36,8 @@ public class BabyServiceImpl implements BabyService {
         baby.setNotes(request.getNotes());
         baby.setHeight(request.getHeight());
         baby.setWeight(request.getWeight());
+        baby.setParent(parent);
+
 
         Baby saved = babyRepository.save(baby);
 
