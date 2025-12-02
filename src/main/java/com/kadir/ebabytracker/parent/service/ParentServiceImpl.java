@@ -27,9 +27,9 @@ public class ParentServiceImpl implements ParentService{
     @Override
     public ParentDto createParent(ParentCreateRequest request) {
         Parent parent = new Parent();
-        parent.setEmail(request.getEmail());
-        parent.setPassword(request.getPassword());
-        parent.setFullName(request.getFullName());
+        parent.setEmail(request.email());
+        parent.setPassword(request.password());
+        parent.setFullName(request.fullName());
 
         Parent saved = parentRepository.save(parent);
 
@@ -70,25 +70,25 @@ public class ParentServiceImpl implements ParentService{
     }
 
     private ParentDto toDto(Parent parent) {
-        ParentDto dto = new ParentDto();
-        dto.setId(parent.getId());
-        dto.setPassword(parent.getPassword());
-        dto.setFullName(parent.getFullName());
-        dto.setEMail(parent.getEmail());
-
-        return dto;
+        return new ParentDto(
+                parent.getId(),
+                parent.getFullName(),
+                parent.getEmail(),
+                parent.getPassword()
+        );
     }
 
     private BabyDto toDto(Baby baby) {
-        BabyDto dto = new BabyDto();
-        dto.setId(baby.getId());
-        dto.setName(baby.getName());
-        dto.setGender(baby.getGender());
-        dto.setBirthDay(baby.getBirthDay());
-        dto.setWeight(baby.getWeight());
-        dto.setHeight(baby.getHeight());
-        dto.setNotes(baby.getNotes());
-        return dto;
+        return new BabyDto(
+                baby.getId(),
+                baby.getName(),
+                baby.getGender(),
+                baby.getNotes(),
+                baby.getBirthDay(),
+                baby.getWeight(),
+                baby.getHeight()
+                );
     }
+
 
 }

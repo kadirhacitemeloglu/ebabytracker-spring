@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface BabyRepository extends JpaRepository<Baby,Long> {
     List<Baby> findAllByParent_Id(Long parentId);
+    List <Baby> findAllByVaccination_Id(Long vaccinationID);
 }

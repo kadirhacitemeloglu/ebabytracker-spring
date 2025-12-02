@@ -1,11 +1,13 @@
 package com.kadir.ebabytracker.baby.model;
 
 import com.kadir.ebabytracker.parent.model.Parent;
+import com.kadir.ebabytracker.vaccination.model.Vaccination;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -39,5 +41,11 @@ public class Baby{
     @ManyToOne
     @JoinColumn(name = "parent_id" , nullable = false)
     private Parent parent;
+
+    @ManyToOne
+    @JoinColumn(name= "vaccinations")
+    private Vaccination vaccination;
+
+
 
 }

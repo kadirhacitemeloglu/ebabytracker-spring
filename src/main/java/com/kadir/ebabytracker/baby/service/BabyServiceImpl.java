@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 public class BabyServiceImpl implements BabyService {
 
     private final BabyRepository babyRepository;
+    private final ParentRepository parentRepository;
+
 
 
     public BabyServiceImpl(BabyRepository babyRepository, ParentRepository parentRepository){
@@ -24,19 +26,19 @@ public class BabyServiceImpl implements BabyService {
         this.parentRepository = parentRepository;
     }
 
-    private final ParentRepository parentRepository;
+
 
     @Override
     public BabyDto createBaby(BabyCreateRequest request) {
 
-        Parent parent = parentRepository.findById(request.getParentId()).orElseThrow(() -> new RuntimeException("Parent not found with id: " + request.getParentId()));
+        Parent parent = parentRepository.findById(request.parentId()).orElseThrow(() -> new RuntimeException("Parent not found with id: " + request.parentId()));
         Baby baby = new Baby();
-        baby.setName(request.getName());
-        baby.setGender(request.getGender());
-        baby.setBirthDay(request.getBirthDay());
-        baby.setNotes(request.getNotes());
-        baby.setHeight(request.getHeight());
-        baby.setWeight(request.getWeight());
+        baby.setName(request.name());
+        baby.setGender(request.gender());
+        baby.setBirthDay(request.birthDay());
+        baby.setNotes(request.notes());
+        baby.setHeight(request.height());
+        baby.setWeight(request.weight());
         baby.setParent(parent);
 
 
@@ -70,12 +72,12 @@ public class BabyServiceImpl implements BabyService {
     @Override
     public BabyDto updateBaby(Long id, BabyUpdateRequest updateRequest){
         Baby baby = babyRepository.findById(id).orElseThrow(()-> new RuntimeException("Baby not found with id: " + id));
-        baby.setName(updateRequest.getName());
-        baby.setGender(updateRequest.getGender());
-        baby.setBirthDay(updateRequest.getBirthDay());
-        baby.setNotes(updateRequest.getNotes());
-        baby.setHeight(updateRequest.getHeight());
-        baby.setWeight(updateRequest.getWeight());
+        baby.setName(updateRequest.name());
+        baby.setGender(updateRequest.gender());
+        baby.setBirthDay(updateRequest.birthDay());
+        baby.setNotes(updateRequest.notes());
+        baby.setHeight(updateRequest.height());
+        baby.setWeight(updateRequest.weight());
 
         Baby updateBaby = babyRepository.save(baby);
         return toDto(updateBaby);
@@ -91,16 +93,18 @@ public class BabyServiceImpl implements BabyService {
                 .toList();
     }
 
+
+
     private BabyDto toDto(Baby baby) {
-        BabyDto dto = new BabyDto();
-        dto.setId(baby.getId());
-        dto.setName(baby.getName());
-        dto.setGender(baby.getGender());
-        dto.setNotes(baby.getNotes());
-        dto.setBirthDay(baby.getBirthDay());
-        dto.setWeight(baby.getWeight());
-        dto.setHeight(baby.getHeight());
-        return dto;
+        return new BabyDto(
+            baby.getId(),
+            baby.getName(),
+            baby.getGender(),
+            baby.getNotes(),
+            baby.getBirthDay(),
+            baby.getHeight(),
+            baby.getHeight()
+        );
     }
 
 

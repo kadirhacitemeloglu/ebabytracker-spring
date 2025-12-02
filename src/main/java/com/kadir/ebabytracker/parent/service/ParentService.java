@@ -10,7 +10,7 @@ public interface ParentService {
 
     ParentDto createParent(ParentCreateRequest request);
 
-    List<ParentDto>  getAllParents();
+    List<ParentDto> getAllParents();
 
     ParentDto getParentWithID(Long id);
 
