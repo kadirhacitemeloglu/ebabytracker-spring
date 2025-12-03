@@ -6,6 +6,7 @@ import com.kadir.ebabytracker.baby.dto.BabyDto;
 import com.kadir.ebabytracker.baby.dto.BabyUpdateRequest;
 import com.kadir.ebabytracker.baby.model.Baby;
 import com.kadir.ebabytracker.baby.repository.BabyRepository;
+import com.kadir.ebabytracker.common.exception.EntityNotFoundException;
 import com.kadir.ebabytracker.parent.model.Parent;
 import com.kadir.ebabytracker.parent.repository.ParentRepository;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class BabyServiceImpl implements BabyService {
     @Override
     public BabyDto createBaby(BabyCreateRequest request) {
 
-        Parent parent = parentRepository.findById(request.parentId()).orElseThrow(() -> new RuntimeException("Parent not found with id: " + request.parentId()));
+        Parent parent = parentRepository.findById(request.parentId()).orElseThrow(() -> new EntityNotFoundException("Parent" ,request.parentId()));
         Baby baby = new Baby();
         baby.setName(request.name());
         baby.setGender(request.gender());
@@ -53,13 +54,13 @@ public class BabyServiceImpl implements BabyService {
         return babyRepository.findAll()
                 .stream()
                 .map(this::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public BabyDto getBabyWithID(Long id){
         //Optional <Baby> babyOptional = babyRepository.findById(id);
-        Baby baby =babyRepository.findById(id).orElseThrow(() -> new RuntimeException("Baby not found with id: " + id));
+        Baby baby =babyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Baby", id));
 
         return  toDto(baby);
     }
@@ -71,7 +72,7 @@ public class BabyServiceImpl implements BabyService {
 
     @Override
     public BabyDto updateBaby(Long id, BabyUpdateRequest updateRequest){
-        Baby baby = babyRepository.findById(id).orElseThrow(()-> new RuntimeException("Baby not found with id: " + id));
+        Baby baby = babyRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Baby",id));
         baby.setName(updateRequest.name());
         baby.setGender(updateRequest.gender());
         baby.setBirthDay(updateRequest.birthDay());
@@ -86,7 +87,7 @@ public class BabyServiceImpl implements BabyService {
     @Override
     public List <BabyDto> getBabiesForParent(Long parentId){
 
-        Parent parent = parentRepository.findById(parentId).orElseThrow(()-> new RuntimeException("Parent not found"));
+        Parent parent = parentRepository.findById(parentId).orElseThrow(()-> new EntityNotFoundException("Parent", parentId));
         List <Baby> babies =babyRepository.findAllByParent_Id(parentId);
         return babies.stream()
                 .map(this::toDto)
@@ -102,7 +103,7 @@ public class BabyServiceImpl implements BabyService {
             baby.getGender(),
             baby.getNotes(),
             baby.getBirthDay(),
-            baby.getHeight(),
+            baby.getWeight(),
             baby.getHeight()
         );
     }

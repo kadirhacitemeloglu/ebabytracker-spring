@@ -1,10 +1,11 @@
 package com.kadir.ebabytracker.vaccination.service;
 
 
-
+import com.kadir.ebabytracker.common.exception.EntityNotFoundException;
 import com.kadir.ebabytracker.baby.model.Baby;
 import com.kadir.ebabytracker.baby.repository.BabyRepository;
 
+import com.kadir.ebabytracker.common.exception.InvalidVaccinationDateException;
 import com.kadir.ebabytracker.vaccination.dto.VaccinationCreateRequest;
 import com.kadir.ebabytracker.vaccination.dto.VaccinationDto;
 import com.kadir.ebabytracker.vaccination.dto.VaccinationUpdateRequest;
@@ -12,6 +13,10 @@ import com.kadir.ebabytracker.vaccination.model.Vaccination;
 import com.kadir.ebabytracker.vaccination.repository.VaccinationRepository;
 import org.springframework.stereotype.Service;
 
+
+
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,22 +37,25 @@ public class VaccinationServiceImpl implements VaccinationService {
     @Override
     public VaccinationDto createVaccination(VaccinationCreateRequest request) {
 
+
+
         Baby baby = babyRepository.findById(request.babyId())
-                .orElseThrow(() -> new RuntimeException("Baby not found with id: " + request.babyId()));
+                .orElseThrow(() -> new EntityNotFoundException("Baby",request.babyId()));
 
 
         Vaccination vaccination = new Vaccination();
+
+        if(request.vaccinationDate().isAfter(LocalDate.now())){
+            throw new InvalidVaccinationDateException(request.vaccinationDate());
+        }
+
         vaccination.setVaccineName(request.vaccineName());
         vaccination.setVaccinationDate(request.vaccinationDate());
         vaccination.setDoseNumber(request.doseNumber());
         vaccination.setNotes(request.notes());
-
-
         vaccination.setBaby(baby);
 
-
         Vaccination saved = vaccinationRepository.save(vaccination);
-
 
         return toDto(saved);
     }
@@ -65,7 +73,7 @@ public class VaccinationServiceImpl implements VaccinationService {
     @Override
     public VaccinationDto getVaccinationWithID(Long id) {
         Vaccination vaccination = vaccinationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vaccination not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Vaccination", id));
         return toDto(vaccination);
     }
 
@@ -84,8 +92,8 @@ public class VaccinationServiceImpl implements VaccinationService {
 
     @Override
     public VaccinationDto updateVaccination(Long id, VaccinationUpdateRequest updateRequest) {
-        Vaccination vaccination =vaccinationRepository.findById(id).orElseThrow(() -> new RuntimeException("Vaccination not found with id : " + id));
-        vaccination.setVaccinationDate(updateRequest.vaccionationDate());
+        Vaccination vaccination =vaccinationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Vaccination", id));
+        vaccination.setVaccinationDate(updateRequest.vaccinationDate());
         vaccination.setNotes(updateRequest.notes());
         vaccination.setDoseNumber(updateRequest.doseNumber());
 

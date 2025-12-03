@@ -3,6 +3,7 @@ package com.kadir.ebabytracker.parent.service;
 import com.kadir.ebabytracker.baby.dto.BabyDto;
 import com.kadir.ebabytracker.baby.model.Baby;
 import com.kadir.ebabytracker.baby.repository.BabyRepository;
+import com.kadir.ebabytracker.common.exception.EntityNotFoundException;
 import com.kadir.ebabytracker.parent.dto.ParentCreateRequest;
 import com.kadir.ebabytracker.parent.dto.ParentDto;
 import com.kadir.ebabytracker.parent.model.Parent;
@@ -47,7 +48,7 @@ public class ParentServiceImpl implements ParentService{
     @Override
     public ParentDto getParentWithID(Long id){
         //Optional <Baby> babyOptional = babyRepository.findById(id);
-        Parent parent =parentRepository.findById(id).orElseThrow(() -> new RuntimeException("Parent not found with id: " + id));
+        Parent parent =parentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Parent", id));
 
         return  toDto(parent);
     }
@@ -60,7 +61,7 @@ public class ParentServiceImpl implements ParentService{
     @Override
     public List <BabyDto> getBabiesForParent(Long parentId){
 
-        parentRepository.findById(parentId).orElseThrow(()-> new RuntimeException("Parent not found"));
+        parentRepository.findById(parentId).orElseThrow(()-> new EntityNotFoundException("Parent",parentId));
 
         List <Baby> babies =babyRepository.findAllByParent_Id(parentId);
 
